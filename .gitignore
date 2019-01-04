@@ -1,0 +1,27 @@
+web/.quasar
+web/.DS_Store
+web/.thumbs.db
+web/node_modules
+web/dist
+web/src-cordova/node_modules
+web/src-cordova/platforms
+web/src-cordova/plugins
+web/src-cordova/www
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+
+# Editor directories and files
+api/.idea
+api/.vscode
+api/*.suo
+api/*.ntvs*
+api/*.njsproj
+api/*.sln
+
+web/.idea
+web/.vscode
+web/*.suo
+web/*.ntvs*
+web/*.njsproj
+web/*.sln

@@ -1,0 +1,15 @@
+{
+    "Movies": [
+        {
+              "PutRequest" :{
+              "Item": {
+                    "Title": {"S": "Star Wars"},
+                    "Genre": {"S": "Science Fiction"},
+                    "Studio": {"S": "Paramount Pictures"},
+                    "Director": {"S": "George Lucas"},
+                    "Actor": {"S": "Carrie Fisher"}
+                }
+            }
+        }
+    ]
+}
