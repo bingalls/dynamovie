@@ -21,6 +21,7 @@ from dynamovieApi.quickstart import views
 
 router = routers.DefaultRouter()
 
+# noinspection PyUnusedName
 urlpatterns = [
     url(r'^', include(router.urls)),
     path(r'movies/', views.movies_list),

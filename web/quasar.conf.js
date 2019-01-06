@@ -41,6 +41,8 @@ module.exports = function (ctx) {
     // framework: 'all' --- includes everything; for dev only!
     framework: {
       components: [
+        'QBtn',
+        'QCollapsible',
         'QLayout',
         'QLayoutHeader',
         'QLayoutDrawer',
@@ -48,13 +50,14 @@ module.exports = function (ctx) {
         'QPage',
         'QToolbar',
         'QToolbarTitle',
-        'QBtn',
         'QIcon',
+        'QInput',
         'QList',
         'QListHeader',
         'QItem',
         'QItemMain',
         'QItemSide',
+        'QSelect',
         'QTable',
         /* Not all these DataTable children are likely needed: */
         'QTh',

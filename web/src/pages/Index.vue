@@ -1,12 +1,45 @@
 <template>
   <q-page class="flex flex-center">
     <!-- <img alt="Quasar logo" src="~assets/quasar-logo-full.svg"> -->
+    <q-collapsible icon="search" label="Search Movie">
+      <form>
+        <q-input v-model="search" stack-label="Title" />
+        <br />
+        <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
+        <Select>
+          <Option value="All" key="All">All</Option>
+          <Option value="Action" key="Action">Action</Option>
+          <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
+        </Select>
+        <q-input v-model="search" stack-label="Studio" />
+        <q-input v-model="search" stack-label="Director" />
+        <q-input v-model="search" stack-label="Actor" />
+        <q-btn icon="search" label="Search" @click="search" />
+      </form>
+    </q-collapsible>
+
     <q-table
       title="Movies"
       :data="serverData"
       :columns="columns"
       row-key="name"
     />
+
+    <q-collapsible icon="plus" label="Add Movie">
+      <form>
+        <q-input v-model="text" stack-label="Title" />
+        <br />
+        <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
+        <Select>
+          <Option value="Action" key="Action">Action</Option>
+          <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
+        </Select>
+        <q-input v-model="text" stack-label="Studio" />
+        <q-input v-model="text" stack-label="Director" />
+        <q-input v-model="text" stack-label="Actor" />
+        <q-btn icon="create" label="Add" @click="addMovie" />
+      </form>
+    </q-collapsible>
   </q-page>
 </template>
 
@@ -24,6 +57,16 @@ export default {
       page: 1,
       rowsNumber: 10, // specifying this determines pagination is server-side
     },
+    genres: [
+      {
+        label: 'Action',
+        value: 'Action',
+      },
+      {
+        label: 'Science Fiction',
+        value: 'Science Fiction',
+      },
+    ],
     columns: [
       {
         name: 'title',
@@ -43,7 +86,7 @@ export default {
         field: 'genre',
         sortable: true,
         classes: 'movies',
-        style: 'width: 10rem',
+        style: 'width: 8rem',
       },
       {
         name: 'studio',
@@ -53,7 +96,7 @@ export default {
         field: 'studio',
         sortable: true,
         classes: 'movies',
-        style: 'width: 10rem',
+        style: 'width: 8rem',
       },
       {
         name: 'director',
@@ -63,7 +106,7 @@ export default {
         field: 'director',
         sortable: true,
         classes: 'movies',
-        style: 'width: 10rem',
+        style: 'width: 8rem',
       },
       {
         name: 'actor',
@@ -77,20 +120,13 @@ export default {
       },
     ],
     serverData: [
-      // {
-      //   title: 'Furious 7',
-      //   genre: 'Action',
-      //   studio: 'Universal',
-      //   director: 'James Wan',
-      //   actor: 'Jordana Brewster',
-      // },
-      // {
-      //   title: 'Star Wars',
-      //   genre: 'Science Fiction',
-      //   studio: 'Disney',
-      //   director: 'JJ Abrams',
-      //   actor: 'Mark Hammil',
-      // },
+      {
+        title: 'Server Down',
+        genre: 'Error',
+        studio: 'Call Support',
+        director: 'info@example.com',
+        actor: 'Try Later',
+      },
     ],
   }),
   name: 'PageIndex',
@@ -106,17 +142,16 @@ export default {
       axios
         .get('http://127.0.0.1:8000/movies/')
         .then(({ data }) => {
-          console.dir(data.list); // eslint-disable-line no-console
+          // console.dir(data); // eslint-disable-line no-console
           // updating pagination to reflect in the UI
           this.serverPagination = pagination;
 
           // we also set (or update) rowsNumber
-          // this.serverPagination.rowsNumber = data.list.rowsNumber;
-          this.serverPagination.rowsNumber = 5; // FIXME
+          this.serverPagination.rowsNumber = data.rowsNumber;
 
           // then we update the rows with the fetched ones
-          // this.serverData = data.list.rows;
-          this.serverData = data.list;
+          // this.serverData = data.data.rows;
+          this.serverData = data.data;
 
           // finally we tell QTable to exit the "loading" state
           this.loading = false;
@@ -128,6 +163,12 @@ export default {
           this.loading = false;
           console.warn(error); // eslint-disable-line no-console
         });
+    },
+    addMovie() {
+      console.log('todo');
+    },
+    search(evt) {
+      console.log(search.value);
     },
   },
   mounted() {

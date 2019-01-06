@@ -1,4 +1,4 @@
-from dynamovieApi.MovieModel import MovieModel
+from api.dynamovieApi.MovieModel import MovieModel
 from rest_framework import serializers
 
 
