@@ -1,43 +1,45 @@
 <template>
   <q-page class="flex flex-center">
-    <!-- <img alt="Quasar logo" src="~assets/quasar-logo-full.svg"> -->
-    <q-collapsible icon="search" label="Search Movie">
-      <form>
-        <q-input v-model="search" stack-label="Title" />
-        <br />
-        <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
-        <Select>
-          <Option value="All" key="All">All</Option>
-          <Option value="Action" key="Action">Action</Option>
-          <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
-        </Select>
-        <q-input v-model="search" stack-label="Studio" />
-        <q-input v-model="search" stack-label="Director" />
-        <q-input v-model="search" stack-label="Actor" />
-        <q-btn icon="search" label="Search" @click="search" />
-      </form>
-    </q-collapsible>
+    <!-- <q-select v-model="selectCriteria" float-label="Search For"
+      :options="searchCriteria" /> -->
+    <select>
+      <Option value="Title" key="Title">Title</Option>
+      <Option value="Genre" key="Genre">Genre</Option>
+      <Option value="Studio" key="Studio">Studio</Option>
+      <Option value="Director" key="Director">Director</Option>
+      <Option value="Actor" key="Actor">Actor</Option>
+    </select>
+
+    <q-search  /> <!-- v-model="search" -->
 
     <q-table
       title="Movies"
       :data="serverData"
       :columns="columns"
-      row-key="name"
-    />
+      row-key="title"
+      :selection="selection"
+      :selected.sync="selected"
+    >
+      <template slot="top-selection" slot-scope="props">
+        <q-btn color="secondary" flat round delete icon="edit" @click="editRow" />
+        <div class="col" />
+        <q-btn color="negative" flat round delete icon="delete" @click="deleteRow" />
+      </template>
+    </q-table>
 
     <q-collapsible icon="plus" label="Add Movie">
       <form>
-        <q-input v-model="text" stack-label="Title" />
+        <q-input stack-label="Title" /> <!-- v-model="text" -->
         <br />
         <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
         <Select>
           <Option value="Action" key="Action">Action</Option>
           <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
         </Select>
-        <q-input v-model="text" stack-label="Studio" />
-        <q-input v-model="text" stack-label="Director" />
-        <q-input v-model="text" stack-label="Actor" />
-        <q-btn icon="create" label="Add" @click="addMovie" />
+        <q-input stack-label="Studio" />
+        <q-input stack-label="Director" />
+        <q-input stack-label="Actor" />
+        <q-btn icon="add" label="Add" @click="addMovie" />
       </form>
     </q-collapsible>
   </q-page>
@@ -53,70 +55,63 @@ export default {
   data: () => ({
     filter: '',
     loading: false,
+    selection: 'single',
+    selected: [{ title: '' }],
     serverPagination: {
       page: 1,
       rowsNumber: 10, // specifying this determines pagination is server-side
     },
     genres: [
-      {
-        label: 'Action',
-        value: 'Action',
-      },
-      {
-        label: 'Science Fiction',
-        value: 'Science Fiction',
-      },
+      { label: 'Action', value: 'Action' },
+      { label: 'Science Fiction', value: 'Science Fiction' },
     ],
+    // searchCriteria: [
+    //   { label: 'Title', value: 'Title' },
+    //   { label: 'Genre', value: 'Genre' },
+    //   { label: 'Studio', value: 'Studio' },
+    //   { label: 'Director', value: 'Director' },
+    //   { label: 'Actor', value: 'Actor' },
+    // ],
     columns: [
       {
         name: 'title',
         required: true,
         label: 'Movie Title',
-        align: 'left',
         field: 'title',
         sortable: true,
-        classes: 'movies',
-        style: 'width: 10rem',
+        style: 'width: 9rem',
       },
       {
         name: 'genre',
         required: true,
         label: 'Genre',
-        align: 'left',
         field: 'genre',
         sortable: true,
-        classes: 'movies',
-        style: 'width: 8rem',
+        style: 'width: 7rem',
       },
       {
         name: 'studio',
         required: true,
         label: 'Studio',
-        align: 'left',
         field: 'studio',
         sortable: true,
-        classes: 'movies',
-        style: 'width: 8rem',
+        style: 'width: 7rem',
       },
       {
         name: 'director',
         required: true,
         label: 'Director',
-        align: 'left',
         field: 'director',
         sortable: true,
-        classes: 'movies',
-        style: 'width: 8rem',
+        style: 'width: 7rem',
       },
       {
-        name: 'actor',
+        name: 'actors',
         required: true,
-        label: 'Actor',
-        align: 'left',
-        field: 'actor',
+        label: 'Actors',
+        field: 'actors',
         sortable: true,
-        classes: 'movies',
-        style: 'width: 10rem',
+        style: 'width: 15rem',
       },
     ],
     serverData: [
@@ -150,8 +145,7 @@ export default {
           this.serverPagination.rowsNumber = data.rowsNumber;
 
           // then we update the rows with the fetched ones
-          // this.serverData = data.data.rows;
-          this.serverData = data.data;
+          this.serverData = data.rows;
 
           // finally we tell QTable to exit the "loading" state
           this.loading = false;
@@ -167,8 +161,9 @@ export default {
     addMovie() {
       console.log('todo');
     },
-    search(evt) {
-      console.log(search.value);
+    search() {
+      console.log('todo');
+      // console.log(search.value);
     },
   },
   mounted() {

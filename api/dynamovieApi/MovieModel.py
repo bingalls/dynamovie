@@ -15,9 +15,9 @@ class MovieModel(Model):
         table_name = "Movies"
         host = "http://localhost:8000"
     Title = UnicodeAttribute(hash_key=True)
-    Genre = UnicodeAttribute(range_key=True)
-    Studio = UnicodeAttribute(null=True)
-    Director = UnicodeAttribute(null=True)
+    Genre = UnicodeAttribute()
+    Studio = UnicodeAttribute()
+    Director = UnicodeAttribute()
     Actor = UnicodeSetAttribute()
 
     def add_movie(self, title, genre, studio, director, actor):
@@ -25,31 +25,32 @@ class MovieModel(Model):
         movie.save()
         return json.loads('{}')
 
-    # FIXME static?
     def del_title(self, title):
-        MovieModel.delete(MovieModel.Title.__eq__(title))
+        print(title)
+        self.delete(MovieModel.Title == title)
         return json.loads('{}')
 
     def list(self, filtering):
-        response = '{ "data": ['
+        response = '{ "rows": ['
         rowsNumber = 0
         for column in self.scan(filtering):
             if rowsNumber > 0:
                 response += ','
             rowsNumber += 1
-            for actor in column.Actor: # return first actor, only
-                break
+            # for actor in column.Actor: # return first actor, only
+            #     break
             response += '{"title": "' + column.Title + \
                 '", "genre": "' + column.Genre + \
                 '", "studio": "' + column.Studio + \
                 '", "director": "' + column.Director + \
-                '", "actor": "' + actor + '"}'
-            #     '", "actors": ['
-            # for person in column.Actor:
-            #     response += '"' + person + '",'
-            # response = response.strip(',') + ']}'
-        response += '],"rowsNumber":' + str(rowsNumber) + '}'
+                '", "actors": "'
+            # '", "actor": "' + actor + '"}' + \
+            for person in column.Actor:
+                response += person + ';'
+            response = response.strip(';') + '"}'
+        response += '],"rowsNumber": "' + str(rowsNumber) + '"}'
         return json.loads(response)
+        # return response
     
     def find_genre(self, genre=''):
         if len(genre) < 1:

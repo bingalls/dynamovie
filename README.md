@@ -36,9 +36,10 @@ Linux may require `sudo` for the following
 * `bash seedMovie.sh` # optional
 
 ### Python Setup
+* `cd api`
 * `python3 -m virtualenv venv`
 * `pip3 check`
-* `pip3 install django django-cors-headers djangorestframework pynamodb setuptools`
+* `pip3 install -r requirements.txt`
 
 Mac & Linux users may clean up newlines for git:
 * `find venv -name RECORD|xargs dos2unix -`
