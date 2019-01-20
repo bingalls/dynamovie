@@ -10,35 +10,36 @@
       <Option value="Actor" key="Actor">Actor</Option>
     </select>
 
-    <q-search  /> <!-- v-model="search" -->
+    <q-search value="" /> <!-- v-model="search" -->
 
+      <!-- :pagination.sync="serverPagination" -->
     <q-table
-      title="Movies"
-      :data="serverData"
       :columns="columns"
-      row-key="title"
-      :selection="selection"
+      :data="serverData"
       :selected.sync="selected"
+      :selection="selection"
+      row-key="title"
+      title="Movies"
     >
       <template slot="top-selection" slot-scope="props">
-        <q-btn color="secondary" flat round delete icon="edit" @click="editRow" />
+        <q-btn color="secondary" flat round delete icon="edit" @click="editMovie" />
         <div class="col" />
-        <q-btn color="negative" flat round delete icon="delete" @click="deleteRow" />
+        <q-btn color="negative" flat round delete icon="delete" @click="deleteMovie" />
       </template>
     </q-table>
 
     <q-collapsible icon="plus" label="Add Movie">
       <form>
-        <q-input stack-label="Title" /> <!-- v-model="text" -->
+        <q-input stack-label="Title" value="" /> <!-- v-model="text" -->
         <br />
         <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
         <Select>
           <Option value="Action" key="Action">Action</Option>
           <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
         </Select>
-        <q-input stack-label="Studio" />
-        <q-input stack-label="Director" />
-        <q-input stack-label="Actor" />
+        <q-input stack-label="Studio" value="" />
+        <q-input stack-label="Director" value="" />
+        <q-input stack-label="Actor" value="" />
         <q-btn icon="add" label="Add" @click="addMovie" />
       </form>
     </q-collapsible>
@@ -57,10 +58,10 @@ export default {
     loading: false,
     selection: 'single',
     selected: [{ title: '' }],
-    serverPagination: {
-      page: 1,
-      rowsNumber: 10, // specifying this determines pagination is server-side
-    },
+    // serverPagination: {
+    //   page: 1,
+    //   rowsNumber: 10, // specifying this determines pagination is server-side
+    // },
     genres: [
       { label: 'Action', value: 'Action' },
       { label: 'Science Fiction', value: 'Science Fiction' },
@@ -74,60 +75,32 @@ export default {
     // ],
     columns: [
       {
-        name: 'title',
-        required: true,
-        label: 'Movie Title',
-        field: 'title',
-        sortable: true,
-        style: 'width: 9rem',
+        field: 'title', label: 'Movie Title', name: 'title', required: true, sortable: true, style: 'width: 9rem',
       },
       {
-        name: 'genre',
-        required: true,
-        label: 'Genre',
-        field: 'genre',
-        sortable: true,
-        style: 'width: 7rem',
+        field: 'genre', label: 'Genre', name: 'genre', required: true, sortable: true, style: 'width: 7rem',
       },
       {
-        name: 'studio',
-        required: true,
-        label: 'Studio',
-        field: 'studio',
-        sortable: true,
-        style: 'width: 7rem',
+        field: 'studio', label: 'Studio', name: 'studio', required: true, sortable: true, style: 'width: 7rem',
       },
       {
-        name: 'director',
-        required: true,
-        label: 'Director',
-        field: 'director',
-        sortable: true,
-        style: 'width: 7rem',
+        field: 'director', label: 'Director', name: 'director', required: true, sortable: true, style: 'width: 7rem',
       },
       {
-        name: 'actors',
-        required: true,
-        label: 'Actors',
-        field: 'actors',
-        sortable: true,
-        style: 'width: 15rem',
+        field: 'actors', label: 'Actors', name: 'actors', required: true, sortable: true, style: 'width: 15rem',
       },
     ],
     serverData: [
       {
-        title: 'Server Down',
-        genre: 'Error',
-        studio: 'Call Support',
-        director: 'info@example.com',
-        actor: 'Try Later',
+        title: 'Server Down', genre: 'Error', studio: 'Call Support', director: 'info@example.com', actor: 'Try Later',
       },
     ],
   }),
   name: 'PageIndex',
 
   methods: {
-    request({ pagination }) {
+    // request({ pagination }) {
+    request() {
       // ', filter' we set QTable to "loading" state
       this.loading = true;
 
@@ -139,10 +112,10 @@ export default {
         .then(({ data }) => {
           // console.dir(data); // eslint-disable-line no-console
           // updating pagination to reflect in the UI
-          this.serverPagination = pagination;
+          // this.serverPagination = pagination;
 
           // we also set (or update) rowsNumber
-          this.serverPagination.rowsNumber = data.rowsNumber;
+          // this.serverPagination.rowsNumber = data.rowsNumber;
 
           // then we update the rows with the fetched ones
           this.serverData = data.rows;
@@ -159,17 +132,23 @@ export default {
         });
     },
     addMovie() {
-      console.log('todo');
+      // console.log('todo');
+    },
+    deleteMovie() {
+      // console.log('todo');
+    },
+    editMovie() {
+      // console.log('todo');
     },
     search() {
-      console.log('todo');
+      // console.log('todo');
       // console.log(search.value);
     },
   },
   mounted() {
     // once mounted, we need to trigger the initial server data fetch
     this.request({
-      pagination: this.serverPagination,
+      // pagination: this.serverPagination,
       filter: this.filter,
     });
   },

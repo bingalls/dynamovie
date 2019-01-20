@@ -57,3 +57,10 @@ Mac & Linux users may clean up newlines for git:
 ### Vue.js Web Server
 * `cd dynamovie/web/`
 * `quasar dev`
+
+## Bugs
+This is development code, and not ready for production. Note:
+* CORS is configured to allow all hosts
+* No TLS, nor authentication
+* All servers are statically set as localhost
+
