@@ -1,16 +1,10 @@
 <template>
   <q-page class="flex flex-center">
-    <!-- <q-select v-model="selectCriteria" float-label="Search For"
-      :options="searchCriteria" /> -->
-    <select>
-      <Option value="Title" key="Title">Title</Option>
-      <Option value="Genre" key="Genre">Genre</Option>
-      <Option value="Studio" key="Studio">Studio</Option>
-      <Option value="Director" key="Director">Director</Option>
-      <Option value="Actor" key="Actor">Actor</Option>
-    </select>
-
-    <q-search value="" /> <!-- v-model="search" -->
+    <form class="flexbox">
+      <q-select :options="selectCriteria" v-model="currentCrit"  />
+      <q-input class="col" clearable placeholder="keyword" v-model="keyword" />
+      <q-btn @click="search" color="primary" icon="search" :loading="loading" round type="submit" />
+    </form>
 
       <!-- :pagination.sync="serverPagination" -->
     <q-table
@@ -32,11 +26,7 @@
       <form>
         <q-input stack-label="Title" value="" /> <!-- v-model="text" -->
         <br />
-        <!-- <q-select v-model="select" float-label="Movie Genre" :options="genres" /> -->
-        <Select>
-          <Option value="Action" key="Action">Action</Option>
-          <Option value="Science Fiction" key="Science Fiction">Science Fiction</Option>
-        </Select>
+        <q-select v-model="currentGenre" float-label="Movie Genre" :options="genres" />
         <q-input stack-label="Studio" value="" />
         <q-input stack-label="Director" value="" />
         <q-input stack-label="Actor" value="" />
@@ -47,6 +37,12 @@
 </template>
 
 <style>
+.flexbox {
+  display: flex;
+}
+.col {
+  margin: 0 0.25rem;
+}
 </style>
 
 <script>
@@ -54,7 +50,10 @@ import axios from 'axios';
 
 export default {
   data: () => ({
+    currentCrit: 'genre',
+    currentGenre: 'Action',
     filter: '',
+    keyword: '',
     loading: false,
     selection: 'single',
     selected: [{ title: '' }],
@@ -66,13 +65,13 @@ export default {
       { label: 'Action', value: 'Action' },
       { label: 'Science Fiction', value: 'Science Fiction' },
     ],
-    // searchCriteria: [
-    //   { label: 'Title', value: 'Title' },
-    //   { label: 'Genre', value: 'Genre' },
-    //   { label: 'Studio', value: 'Studio' },
-    //   { label: 'Director', value: 'Director' },
-    //   { label: 'Actor', value: 'Actor' },
-    // ],
+    selectCriteria: [
+      { label: 'Title', value: 'title' },
+      { label: 'Genre', value: 'genre' },
+      { label: 'Studio', value: 'studio' },
+      { label: 'Director', value: 'director' },
+      { label: 'Actor', value: 'actor' },
+    ],
     columns: [
       {
         field: 'title', label: 'Movie Title', name: 'title', required: true, sortable: true, style: 'width: 9rem',
@@ -100,15 +99,15 @@ export default {
 
   methods: {
     // request({ pagination }) {
-    request() {
-      // ', filter' we set QTable to "loading" state
+    request(filter, query = '') {
+      // set QTable to "loading" state
       this.loading = true;
 
-      // we do the server data fetch, based on pagination and filter received
+      // do the server data fetch, based on pagination and filter received
       // (using Axios here, but can be anything; parameters vary based on backend implementation)
       // eslint-disable-next-line no-undef
       axios
-        .get('http://127.0.0.1:8000/movies/')
+        .get(`http://127.0.0.1:8000/movies/${query}`)
         .then(({ data }) => {
           // console.dir(data); // eslint-disable-line no-console
           // updating pagination to reflect in the UI
@@ -118,7 +117,15 @@ export default {
           // this.serverPagination.rowsNumber = data.rowsNumber;
 
           // then we update the rows with the fetched ones
+          // if (keyword === '') {
           this.serverData = data.rows;
+          // } else {
+          //   this.serverData = data.rows.filter((row) => { // eslint-disable-line arrow-body-style
+          //     return Object.values(row).some((col) => { // eslint-disable-line arrow-body-style
+          //       return col.includes(keyword);
+          //     });
+          //   });
+          // }
 
           // finally we tell QTable to exit the "loading" state
           this.loading = false;
@@ -134,15 +141,34 @@ export default {
     addMovie() {
       // console.log('todo');
     },
-    deleteMovie() {
-      // console.log('todo');
+    deleteMovie(title) {
+      axios
+        .delete(`http://127.0.0.1:8000/movies/?title=${title}`)
+        .then(({ data }) => {
+          this.serverData = data.rows;
+          // this.loading = false;
+        })
+        .catch((error) => {
+          // we tell QTable to exit the "loading" state
+          // this.loading = false;
+          console.warn(error); // eslint-disable-line no-console
+        });
     },
-    editMovie() {
-      // console.log('todo');
+    editMovie(title) {
+      axios
+        .post(`http://127.0.0.1:8000/movies/?title=${title}`)
+        .then(({ data }) => {
+          this.serverData = data.rows;
+          // this.loading = false;
+        })
+        .catch((error) => {
+          // we tell QTable to exit the "loading" state
+          // this.loading = false;
+          console.warn(error); // eslint-disable-line no-console
+        });
     },
     search() {
-      // console.log('todo');
-      // console.log(search.value);
+      this.request(null, `?col=${this.currentCrit}&search=${encodeURIComponent(this.keyword)}`);
     },
   },
   mounted() {

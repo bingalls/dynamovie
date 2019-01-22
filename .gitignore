@@ -18,6 +18,7 @@ api/*.suo
 api/*.ntvs*
 api/*.njsproj
 api/*.sln
+api/venv
 
 web/.idea
 web/.vscode

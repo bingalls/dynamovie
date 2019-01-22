@@ -52,11 +52,32 @@ class MovieModel(Model):
         return json.loads(response)
         # return response
     
+    def find_actor(self, actor=''):
+        if len(actor) < 1:
+            filtering = MovieModel.Actor.exists()
+        else:
+            filtering = MovieModel.Actor.contains(actor)
+        return self.list(filtering)
+
+    def find_director(self, director=''):
+        if len(director) < 1:
+            filtering = MovieModel.Director.exists()
+        else:
+            filtering = MovieModel.Director.contains(director)
+        return self.list(filtering)
+
     def find_genre(self, genre=''):
         if len(genre) < 1:
             filtering = MovieModel.Genre.exists()
         else:
             filtering = MovieModel.Genre.contains(genre)
+        return self.list(filtering)
+
+    def find_studio(self, studio=''):
+        if len(studio) < 1:
+            filtering = MovieModel.Studio.exists()
+        else:
+            filtering = MovieModel.Studio.contains(studio)
         return self.list(filtering)
 
     def find_title(self, title=''):
