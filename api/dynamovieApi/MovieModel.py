@@ -31,12 +31,15 @@ class MovieModel(Model):
         return json.loads('{}')
 
     def list(self, filtering):
+        """
+        Serialize filtered movie rows to json. ToDo: rewrite with Python's ORM interface
+        """
         response = '{ "rows": ['
-        rowsNumber = 0
+        rows_number = 0
         for column in self.scan(filtering):
-            if rowsNumber > 0:
+            if rows_number > 0:
                 response += ','
-            rowsNumber += 1
+            rows_number += 1
             # for actor in column.Actor: # return first actor, only
             #     break
             response += '{"title": "' + column.Title + \
@@ -48,41 +51,19 @@ class MovieModel(Model):
             for person in column.Actor:
                 response += person + ';'
             response = response.strip(';') + '"}'
-        response += '],"rowsNumber": "' + str(rowsNumber) + '"}'
+        response += '],"rows_number": "' + str(rows_number) + '"}'
         return json.loads(response)
-        # return response
-    
-    def find_actor(self, actor=''):
-        if len(actor) < 1:
-            filtering = MovieModel.Actor.exists()
-        else:
-            filtering = MovieModel.Actor.contains(actor)
-        return self.list(filtering)
 
-    def find_director(self, director=''):
-        if len(director) < 1:
-            filtering = MovieModel.Director.exists()
-        else:
-            filtering = MovieModel.Director.contains(director)
-        return self.list(filtering)
-
-    def find_genre(self, genre=''):
-        if len(genre) < 1:
-            filtering = MovieModel.Genre.exists()
-        else:
-            filtering = MovieModel.Genre.contains(genre)
-        return self.list(filtering)
-
-    def find_studio(self, studio=''):
-        if len(studio) < 1:
-            filtering = MovieModel.Studio.exists()
-        else:
-            filtering = MovieModel.Studio.contains(studio)
-        return self.list(filtering)
-
-    def find_title(self, title=''):
-        if len(title) < 1:
-            filtering = MovieModel.Title.exists()
-        else:
-            filtering = MovieModel.Title.contains(title)
-        return self.list(filtering)
+    def find(self, category, search):
+        if len(search) > 0:
+            if category == 'actor':
+                return self.list(MovieModel.Actor.contains(search))
+            if category == 'director':
+                return self.list(MovieModel.Director.contains(search))
+            if category == 'genre':
+                return self.list(MovieModel.Genre.contains(search))
+            if category == 'studio':
+                return self.list(MovieModel.Studio.contains(search))
+            if category == 'title':
+                return self.list(MovieModel.Title.contains(search))
+        return self.list(MovieModel.Title.exists())  # all movies
