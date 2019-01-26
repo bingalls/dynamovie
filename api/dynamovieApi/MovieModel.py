@@ -21,13 +21,29 @@ class MovieModel(Model):
     Actor = UnicodeSetAttribute()
 
     def add_movie(self, title, genre, studio, director, actor):
-        movie = MovieModel(title, genre)
+        movie = MovieModel(title)
+        movie.Actor = actor
+        movie.Director = director
+        movie.Genre = genre
+        movie.Studio = studio
         movie.save()
         return json.loads('{}')
 
     def del_title(self, title):
-        print(title)
-        self.delete(MovieModel.Title == title)
+        movie = MovieModel(title)
+        movie.delete()
+        return json.loads('{}')
+
+    def edit_movie(self, oldtitle, genre, studio, director, actor, newtitle):
+        movie = MovieModel(oldtitle)
+        self.del_title(oldtitle)
+        movie.Title = newtitle
+        movie.Actor = actor
+        movie.Director = director
+        movie.Genre = genre
+        movie.Studio = studio
+        # movie.update()
+        movie.save()
         return json.loads('{}')
 
     def list(self, filtering):

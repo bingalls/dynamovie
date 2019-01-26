@@ -1,4 +1,5 @@
 astroid>=2.1.0
+bleach>=1.12.0
 boto3>=1.9.82
 botocore>=1.12.82
 Django>=2.1.5
@@ -21,6 +22,7 @@ pynamodb>=3.3.3
 python-dateutil>=2.7.5
 pytz>=2018.9
 s3transfer>=0.1.13
+simplejson>=3.16.0
 six>=1.12.0
 stevedore>=1.30.0
 urllib3>=1.24.1

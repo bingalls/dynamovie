@@ -2,8 +2,9 @@
   <q-page class="flex flex-center">
     <form class="flexbox">
       <q-select :options="selectCriteria" v-model="currentCrit"  />
-      <q-input class="col" clearable placeholder="keyword" v-model="keyword" />
-      <q-btn @click="search" color="primary" icon="search" :loading="loading" round type="submit" />
+      <q-input class="col" clearable placeholder="keyword" v-model="keyword"
+       @keydown.enter="search" />
+      <q-btn color="primary" icon="search" :loading="loading" round type="submit" @click="search" />
     </form>
 
       <!-- :pagination.sync="serverPagination" -->
@@ -24,12 +25,12 @@
 
     <q-collapsible icon="plus" label="Add Movie">
       <form>
-        <q-input stack-label="Title" value="" /> <!-- v-model="text" -->
+        <q-input stack-label="Title" v-model="title" />
         <br />
         <q-select v-model="currentGenre" float-label="Movie Genre" :options="genres" />
-        <q-input stack-label="Studio" value="" />
-        <q-input stack-label="Director" value="" />
-        <q-input stack-label="Actor" value="" />
+        <q-input stack-label="Studio" v-model="studio" />
+        <q-input stack-label="Director" v-model="director" />
+        <q-input stack-label="Actor" v-model="actor" />
         <q-btn icon="add" label="Add" @click="addMovie" />
       </form>
     </q-collapsible>
@@ -50,19 +51,24 @@ import axios from 'axios';
 
 export default {
   data: () => ({
+    actor: '',
     currentCrit: 'genre',
     currentGenre: 'Action',
+    director: '',
     filter: '',
     keyword: '',
     loading: false,
     selection: 'single',
     selected: [{ title: '' }],
+    studio: '',
+    title: '',
     // serverPagination: {
     //   page: 1,
     //   rowsNumber: 10, // specifying this determines pagination is server-side
     // },
     genres: [
       { label: 'Action', value: 'Action' },
+      { label: 'Horror', value: 'Horror' },
       { label: 'Science Fiction', value: 'Science Fiction' },
     ],
     selectCriteria: [
@@ -139,7 +145,23 @@ export default {
         });
     },
     addMovie() {
-      // console.log('todo');
+      axios
+        .put('http://127.0.0.1:8000/movies/', {
+          actor: [this.actor],
+          director: this.director,
+          genre: this.currentGenre,
+          studio: this.studio,
+          title: this.title,
+        })
+        .then(({ data }) => {
+          this.serverData = data.rows;
+          // this.loading = false;
+        })
+        .catch((error) => {
+          // we tell QTable to exit the "loading" state
+          // this.loading = false;
+          console.warn(error); // eslint-disable-line no-console
+        });
     },
     deleteMovie(title) {
       axios
@@ -168,7 +190,7 @@ export default {
         });
     },
     search() {
-      this.request(null, `?col=${this.currentCrit}&search=${encodeURIComponent(this.keyword)}`);
+      this.request(null, `?cat=${this.currentCrit}&search=${encodeURIComponent(this.keyword)}`);
     },
   },
   mounted() {
