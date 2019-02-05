@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from simplejson import loads
 import bleach
 
+
 @api_view(['DELETE', 'GET', 'POST', 'PUT'])
 def movies_list(request):
     """
@@ -27,7 +28,7 @@ def movies_list(request):
 
     if request.method == 'POST':
         parameters = loads(bleach.clean(request.body.decode("utf-8")))
-        actor = parameters.get('actor', '')
+        actor = parameters.get('actors', '')
         director = parameters.get('director', '')
         genre = parameters.get('genre', '')
         studio = parameters.get('studio', '')
@@ -38,10 +39,12 @@ def movies_list(request):
 
     if request.method == 'PUT':
         parameters = loads(bleach.clean(request.body.decode("utf-8")))
-        actor = parameters.get('actor', '')
+        actor = parameters.get('actors', '')
         director = parameters.get('director', '')
         genre = parameters.get('genre', '')
         movie = MovieModel()
         studio = parameters.get('studio', '')
         title = parameters.get('title', '')
         return Response(movie.add_movie(title, genre, studio, director, actor))
+
+    return loads('{}')  # other http method should not be allowed

@@ -1,26 +1,70 @@
 <template>
   <q-page class="flex flex-center">
+    <!-- Search box. Moving this to the title bar, puts the model scope in a new component -->
     <form class="flexbox">
+      <!-- <q-select :options="selectCriteria" v-model="genre"  /> -->
       <q-select :options="selectCriteria" v-model="currentCrit"  />
       <q-input class="col" clearable placeholder="keyword" v-model="keyword"
        @keydown.enter="search" />
       <q-btn color="primary" icon="search" :loading="loading" round type="submit" @click="search" />
     </form>
 
-      <!-- :pagination.sync="serverPagination" -->
+    <!-- todo :pagination.sync="serverPagination" -->
     <q-table
       :columns="columns"
       :data="serverData"
-      :selected.sync="selected"
-      :selection="selection"
       row-key="title"
       title="Movies"
     >
-      <template slot="top-selection" slot-scope="props">
-        <q-btn color="secondary" flat round delete icon="edit" @click="editMovie" />
-        <div class="col" />
-        <q-btn color="negative" flat round delete icon="delete" @click="deleteMovie" />
-      </template>
+      <q-tr slot="body" slot-scope="props" :props="props">
+        <q-td key="title" :props="props">{{ props.row.title }}
+          <q-popup-edit :data-id="props.row.title" :props="props" v-model="props.row.title"
+           v-on:save="editMovie($event, props.row, 'title')">
+            <q-field><q-input v-model="props.row.title" /></q-field>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="genre" :props="props">
+          <q-select v-model="props.row.genre" :options="genres" />
+          <q-popup-edit :data-id="props.row.title" :props="props" v-model="props.row.genre"
+            title="Update genre" buttons>
+            <q-select :data-id="props.row.title" float-label="Movie Genre" :options="genres"
+             v-model="props.row.genre" v-on:input="editMovie($event, props.row, 'genre')" />
+          </q-popup-edit>
+        </q-td>
+        <q-td key="studio" :props="props">
+          <q-select v-model="props.row.studio" :options="studios" />
+          <q-popup-edit :data-id="props.row.title" :props="props" title="Update studio" buttons>
+            <q-select :data-id="props.row.title" float-label="Studio" :options="studios"
+              v-model="props.row.studio" v-on:input="editMovie($event, props.row, 'studio')" />
+          </q-popup-edit>
+        </q-td>
+        <q-td key="director" :props="props">{{ props.row.director }}
+          <q-popup-edit :data-id="props.row.title" :props="props" v-model="props.row.director"
+           v-on:save="editMovie($event, props.row, 'director')">
+            <q-field><q-input v-model="props.row.director" /></q-field>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="actors" :data-id="props.row.title" :props="props">{{ props.row.actors }}
+          <q-popup-edit :data-id="props.row.title" :props="props" v-model="props.row.actors"
+           v-on:save="editMovie($event, props.row, 'actors')">
+            <q-field><q-input v-model="props.row.actors" /></q-field>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="delkey" :props="props">
+          <!-- <q-btn flat round delete icon="delete" v-model="props.row.title"
+          @click="deleteMovie" label="props.row.title" /> -->
+
+          <q-collapsible icon="delete">
+            <form>
+              <!-- <input type="hidden" name="title" value="{{rops.row.title}}"
+                v-model="props.row.title" /> -->
+              <q-input name="todelete" readonly v-model="title" value="props.row.title" />
+              <q-btn :data-id="props.row.title" icon="delete" label="Confirm"
+               @click="deleteMovie" :value="props.row.title" />
+            </form>
+          </q-collapsible>
+        </q-td>
+      </q-tr>
     </q-table>
 
     <q-collapsible icon="plus" label="Add Movie">
@@ -28,9 +72,9 @@
         <q-input stack-label="Title" v-model="title" />
         <br />
         <q-select v-model="currentGenre" float-label="Movie Genre" :options="genres" />
-        <q-input stack-label="Studio" v-model="studio" />
+        <q-select v-model="currentStudio" float-label="Studio" :options="studios" />
         <q-input stack-label="Director" v-model="director" />
-        <q-input stack-label="Actor" v-model="actor" />
+        <q-input stack-label="Actors" v-model="actors" />
         <q-btn icon="add" label="Add" @click="addMovie" />
       </form>
     </q-collapsible>
@@ -51,17 +95,18 @@ import axios from 'axios';
 
 export default {
   data: () => ({
-    actor: '',
-    currentCrit: 'genre',
+    actors: '',
+    currentCrit: 'currentGenre',
     currentGenre: 'Action',
+    currentStudio: 'independent',
     director: '',
     filter: '',
     keyword: '',
     loading: false,
     selection: 'single',
     selected: [{ title: '' }],
-    studio: '',
     title: '',
+    url: 'http://127.0.0.1:8000',
     // serverPagination: {
     //   page: 1,
     //   rowsNumber: 10, // specifying this determines pagination is server-side
@@ -73,10 +118,18 @@ export default {
     ],
     selectCriteria: [
       { label: 'Title', value: 'title' },
-      { label: 'Genre', value: 'genre' },
-      { label: 'Studio', value: 'studio' },
+      { label: 'Genre', value: 'currentGenre' },
+      { label: 'Studio', value: 'currentStudio' },
       { label: 'Director', value: 'director' },
-      { label: 'Actor', value: 'actor' },
+      { label: 'Actor', value: 'actors' },
+    ],
+    studios: [
+      { label: 'Disney', value: 'Disney' },
+      { label: 'Elevation', value: 'Elevation' },
+      { label: 'independent', value: 'independent' },
+      { label: 'Lucas Films', value: 'Lucas Films' },
+      { label: 'Marvel', value: 'Marvel' },
+      { label: 'Universal', value: 'Universal' },
     ],
     columns: [
       {
@@ -94,98 +147,97 @@ export default {
       {
         field: 'actors', label: 'Actors', name: 'actors', required: true, sortable: true, style: 'width: 15rem',
       },
+      {
+        field: 'delkey', label: '', name: 'delkey', required: true, sortable: false, style: 'width: 1rem',
+      },
     ],
     serverData: [
       {
-        title: 'Server Down', genre: 'Error', studio: 'Call Support', director: 'info@example.com', actor: 'Try Later',
+        title: 'Server Down', genre: 'Error', studio: 'Call Support', director: 'info@example.com', actors: 'Try Later',
       },
     ],
   }),
   name: 'PageIndex',
 
   methods: {
-    // request({ pagination }) {
-    request(filter, query = '') {
-      // set QTable to "loading" state
-      this.loading = true;
+    request(filter, query = '') { // todo { pagination } param
+      this.loading = true; // set QTable to "loading" state
 
       // do the server data fetch, based on pagination and filter received
-      // (using Axios here, but can be anything; parameters vary based on backend implementation)
       // eslint-disable-next-line no-undef
       axios
-        .get(`http://127.0.0.1:8000/movies/${query}`)
+        .get(`${this.url}/movies/${query}`)
         .then(({ data }) => {
-          // console.dir(data); // eslint-disable-line no-console
-          // updating pagination to reflect in the UI
           // this.serverPagination = pagination;
-
-          // we also set (or update) rowsNumber
           // this.serverPagination.rowsNumber = data.rowsNumber;
 
-          // then we update the rows with the fetched ones
-          // if (keyword === '') {
           this.serverData = data.rows;
-          // } else {
-          //   this.serverData = data.rows.filter((row) => { // eslint-disable-line arrow-body-style
-          //     return Object.values(row).some((col) => { // eslint-disable-line arrow-body-style
-          //       return col.includes(keyword);
-          //     });
-          //   });
-          // }
-
-          // finally we tell QTable to exit the "loading" state
-          this.loading = false;
+          this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
-          // there's an error... do SOMETHING
-
-          // we tell QTable to exit the "loading" state
-          this.loading = false;
+          this.loading = false; // exit QTable loading state
           console.warn(error); // eslint-disable-line no-console
         });
     },
     addMovie() {
+      this.loading = true; // set QTable to "loading" state
       axios
-        .put('http://127.0.0.1:8000/movies/', {
-          actor: [this.actor],
+        .put(`${this.url}/movies/`, {
+          actors: [this.actors],
           director: this.director,
           genre: this.currentGenre,
-          studio: this.studio,
+          studio: this.currentStudio,
           title: this.title,
         })
         .then(({ data }) => {
           this.serverData = data.rows;
-          // this.loading = false;
+          this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
-          // we tell QTable to exit the "loading" state
-          // this.loading = false;
+          this.loading = false; // exit QTable loading state
           console.warn(error); // eslint-disable-line no-console
         });
     },
-    deleteMovie(title) {
+    deleteMovie(event) {
+      this.loading = true; // set QTable to "loading" state
       axios
-        .delete(`http://127.0.0.1:8000/movies/?title=${title}`)
+        .delete(`${this.url}/movie/${event.currentTarget.getAttribute('data-id')}`)
         .then(({ data }) => {
           this.serverData = data.rows;
-          // this.loading = false;
+          // this.request(this.currentCrit, this.keyword);
+          this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
-          // we tell QTable to exit the "loading" state
-          // this.loading = false;
+          this.loading = false; // exit QTable loading state
           console.warn(error); // eslint-disable-line no-console
         });
     },
-    editMovie(title) {
+    editMovie(target, id, column) {
+      const formData = {
+        oldtitle: id.title,
+        newtitle: id.title,
+        genre: id.genre,
+        studio: id.studio,
+        director: id.director,
+        actors: [id.actors],
+      };
+
+      if (column === 'title') {
+        formData.newtitle = target;
+      }
+      if (column === 'actors') {
+        formData.actors = [target];
+      }
+
+      this.loading = true; // set QTable to "loading" state
       axios
-        .post(`http://127.0.0.1:8000/movies/?title=${title}`)
+        .post(`${this.url}/movies/`, formData)
         .then(({ data }) => {
           this.serverData = data.rows;
-          // this.loading = false;
+          this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
-          // we tell QTable to exit the "loading" state
-          // this.loading = false;
+          this.loading = false; // exit QTable loading state
           console.warn(error); // eslint-disable-line no-console
         });
     },

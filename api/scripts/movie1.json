@@ -5,7 +5,7 @@
               "Item": {
                     "Title": {"S": "Star Wars"},
                     "Genre": {"S": "Science Fiction"},
-                    "Studio": {"S": "Paramount Pictures"},
+                    "Studio": {"S": "Lucas Films"},
                     "Director": {"S": "George Lucas"},
                     "Actor": {"S": "Carrie Fisher"}
                 }

@@ -39,15 +39,20 @@ module.exports = function (ctx) {
       open: true // opens browser window automatically
     },
     // framework: 'all' --- includes everything; for dev only!
+    // 'QDialog',
+    // 'QModal',
     framework: {
       components: [
         'QBtn',
+        'QCheckbox',
         'QCollapsible',
+        'QField',
         'QLayout',
         'QLayoutHeader',
         'QLayoutDrawer',
         'QPageContainer',
         'QPage',
+        'QPopupEdit',
         'QSearch',
         'QToolbar',
         'QToolbarTitle',

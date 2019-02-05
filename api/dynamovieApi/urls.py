@@ -17,12 +17,13 @@ from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
 from dynamovieApi.quickstart import views
-
+from dynamovieApi.quickstart import movie
 
 router = routers.DefaultRouter()
 
 # noinspection PyUnusedName
 urlpatterns = [
     url(r'^', include(router.urls)),
-    path(r'movies/', views.movies_list),
+    path('movies/', views.movies_list),
+    path('movie/<title>/', movie.movie_get),
 ]

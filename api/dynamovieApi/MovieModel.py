@@ -20,31 +20,30 @@ class MovieModel(Model):
     Director = UnicodeAttribute()
     Actor = UnicodeSetAttribute()
 
-    def add_movie(self, title, genre, studio, director, actor):
+    def add_movie(self, title, genre, studio, director, actors):
         movie = MovieModel(title)
-        movie.Actor = actor
+        movie.Actor = actors
         movie.Director = director
         movie.Genre = genre
         movie.Studio = studio
         movie.save()
-        return json.loads('{}')
+        return self.list(MovieModel.Title.exists())  # all movies
 
     def del_title(self, title):
         movie = MovieModel(title)
         movie.delete()
-        return json.loads('{}')
+        return self.list(MovieModel.Title.exists())  # all movies
 
-    def edit_movie(self, oldtitle, genre, studio, director, actor, newtitle):
+    def edit_movie(self, oldtitle, genre, studio, director, actors, newtitle):
         movie = MovieModel(oldtitle)
         self.del_title(oldtitle)
         movie.Title = newtitle
-        movie.Actor = actor
+        movie.Actor = actors
         movie.Director = director
         movie.Genre = genre
         movie.Studio = studio
-        # movie.update()
         movie.save()
-        return json.loads('{}')
+        return self.list(MovieModel.Title.exists())  # all movies
 
     def list(self, filtering):
         """
@@ -56,14 +55,11 @@ class MovieModel(Model):
             if rows_number > 0:
                 response += ','
             rows_number += 1
-            # for actor in column.Actor: # return first actor, only
-            #     break
             response += '{"title": "' + column.Title + \
                 '", "genre": "' + column.Genre + \
                 '", "studio": "' + column.Studio + \
                 '", "director": "' + column.Director + \
                 '", "actors": "'
-            # '", "actor": "' + actor + '"}' + \
             for person in column.Actor:
                 response += person + ';'
             response = response.strip(';') + '"}'
@@ -72,7 +68,7 @@ class MovieModel(Model):
 
     def find(self, category, search):
         if len(search) > 0:
-            if category == 'actor':
+            if category == 'actors':
                 return self.list(MovieModel.Actor.contains(search))
             if category == 'director':
                 return self.list(MovieModel.Director.contains(search))

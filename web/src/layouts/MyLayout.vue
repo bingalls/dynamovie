@@ -21,16 +21,6 @@
           <div slot="subtitle">Running on Quasar v{{ $q.version }}</div>
         </q-toolbar-title>
 
-        <!-- <q-select v-model="select" inverted color="none" float-label="Search For"
-         :options="searchCriteria" /> -->
-        <!-- <select>
-          <Option value="Title" key="Title">Title</Option>
-          <Option value="Genre" key="Genre">Genre</Option>
-          <Option value="Studio" key="Studio">Studio</Option>
-          <Option value="Director" key="Director">Director</Option>
-          <Option value="Actor" key="Actor">Actor</Option>
-        </select>
-        <q-search v-model="search" inverted color="none" float-label="Search Movies" /> -->
       </q-toolbar>
     </q-layout-header>
 
@@ -81,13 +71,6 @@ export default {
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
-      // searchCriteria: [
-      //   { label: 'Title', value: 'Title' },
-      //   { label: 'Genre', value: 'Genre' },
-      //   { label: 'Studio', value: 'Studio' },
-      //   { label: 'Director', value: 'Director' },
-      //   { label: 'Actor', value: 'Actor' },
-      // ],
     };
   },
   methods: {
