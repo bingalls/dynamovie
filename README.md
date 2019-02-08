@@ -19,6 +19,9 @@ current Node version.
 * `brew install python3 --with-brewed-openssl`
 * `brew install awscli cask node pyenv-virtualenv pyenv-virtualenvwrapper`
 * `brew cask install dynamodb-local`
+Dynamovie: A responsive, single page progressive movie database using Amazon's DynamoDB.
+It is possible to adapt this with your legacy web application.
+Uses Quasar Vue.js framework, and Python Django ReST framework.
 
 ### MS Windows
 * todo
@@ -58,9 +61,20 @@ Mac & Linux users may clean up newlines for git:
 * `cd dynamovie/web/`
 * `quasar dev`
 
-## Bugs
-This is development code, and not ready for production. Note:
-* CORS is configured to allow all hosts
-* No TLS, nor authentication
-* All servers are statically set as localhost
+## Road Map
+This is development code, not yet ready for production. With community support, the following
+will be improved:
 
+* Font in select is too big
+* delete & update loses filter of data
+* Quasar is still a beta release
+* As few files have been changed, to make upgrade easier. For example, side menu is unchanged.
+* CORS is configured to allow all hosts
+* No TLS, nor authentication. Important for updates & deletes
+* API's localhost setting in Index.vue should be moved to quasar.conf.js
+* No tests have been written. Only tested with local DynamoDB
+* API can be richer: versioning, schema, graphql, etc
+* Pagination is currently client side, only. Server pagination is commented.
+* Studios & Genres come from a limited static list
+* Move to TypeScript, just like the next version 
+* The table is too wide for mobile. Currently, no feasible solution
