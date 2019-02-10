@@ -1,15 +1,16 @@
 # Dynamovie
-Single Page Web App to manage a movie database using AWS DynamoDB
+Single Page Web App to manage a movie database using Amazon's DynamoDB
+![screenshot](dynamovie.png)
 
 ## Install
 ### Requirements
-Currently only configured for local development, with
 * node v11.6.0
 * python 3.7.2
+* quasar 0.17.19
 * vue 3.2.3
 
-Npm's `dynalite` package claims easy local DynamoDB, but is not available for the
-current Node version.
+Npm's `dynalite` package claims to easily run local DynamoDB, but is not
+available for the current Node version.
 
 ### Linux
 * todo
@@ -43,38 +44,38 @@ Linux may require `sudo` for the following
 * `python3 -m virtualenv venv`
 * `pip3 check`
 * `pip3 install -r requirements.txt`
+* `ln -s venv ..` # for your IDE
 
 Mac & Linux users may clean up newlines for git:
 * `find venv -name RECORD|xargs dos2unix -`
 
 ## Run
-### Dynamodb Local
-* `bash api/scripts/startDynamo.sh`
+* `./start.sh`
+* Note that terminating start.sh with Control-C does not terminate API server nor 
+database started in background
+* Edit api/dynamovie/settings.py before running in production! Settings are *not secure*
 
-### Python ReST API Server
-* `cd dynamovie/`
-* `source venv/bin/activate`
-* `cd dynamovie/api`
-* `python3 manage.py runserver`
+## Testing
+This has only been tested on a desktop, with DynamoDB running on localhost.
+Robust static analysis has been applied, including
+* eslint
+* stylelint
+* flake8
+* pydocstyle
+* pylama
 
-### Vue.js Web Server
-* `cd dynamovie/web/`
-* `quasar dev`
+However, this code needs unit and integration testing
 
 ## Road Map
-This is development code, not yet ready for production. With community support, the following
-will be improved:
+This code is not fully polished for production. 
+With community support, the following will be improved:
 
-* Font in select is too big
-* delete & update loses filter of data
 * Quasar is still a beta release
-* As few files have been changed, to make upgrade easier. For example, side menu is unchanged.
-* CORS is configured to allow all hosts
-* No TLS, nor authentication. Important for updates & deletes
-* API's localhost setting in Index.vue should be moved to quasar.conf.js
-* No tests have been written. Only tested with local DynamoDB
+* Fewest Quasar files were changed, to ease upgrades. For example, side menu is unchanged.
+* No TLS, nor authentication. Updates & deletes should be restricted for a production release.
+* API's host url setting in Index.vue should be moved to a file similar to quasar.conf.js
 * API can be richer: versioning, schema, graphql, etc
 * Pagination is currently client side, only. Server pagination is commented.
 * Studios & Genres come from a limited static list
-* Move to TypeScript, just like the next version 
-* The table is too wide for mobile. Currently, no feasible solution
+* Move to TypeScript, just like the next version of Vue & Quasar
+* The table is too wide for mobile. Open to suggestions

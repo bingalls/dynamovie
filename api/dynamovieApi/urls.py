@@ -26,5 +26,5 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^', include(router.urls)),
     path('movies/', views.movies_list),
-    path('movie/<title>/', movie.movie_get),
+    path('movie/<title>/', movie.handle),
 ]

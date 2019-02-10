@@ -88,6 +88,10 @@
 .col {
   margin: 0 0.25rem;
 }
+/* Fixing Quasar v0.17.19 bug? Font in select elements was larger than table text */
+.q-input-target, .q-input-shadow {
+  font-size: 0.9rem
+}
 </style>
 
 <script>
@@ -96,7 +100,7 @@ import axios from 'axios';
 export default {
   data: () => ({
     actors: '',
-    currentCrit: 'currentGenre',
+    currentCrit: 'genre',
     currentGenre: 'Action',
     currentStudio: 'independent',
     director: '',
@@ -118,8 +122,8 @@ export default {
     ],
     selectCriteria: [
       { label: 'Title', value: 'title' },
-      { label: 'Genre', value: 'currentGenre' },
-      { label: 'Studio', value: 'currentStudio' },
+      { label: 'Genre', value: 'genre' },
+      { label: 'Studio', value: 'studio' },
       { label: 'Director', value: 'director' },
       { label: 'Actor', value: 'actors' },
     ],
@@ -202,9 +206,8 @@ export default {
       this.loading = true; // set QTable to "loading" state
       axios
         .delete(`${this.url}/movie/${event.currentTarget.getAttribute('data-id')}`)
-        .then(({ data }) => {
-          this.serverData = data.rows;
-          // this.request(this.currentCrit, this.keyword);
+        .then(() => {
+          this.search({});
           this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
@@ -247,10 +250,7 @@ export default {
   },
   mounted() {
     // once mounted, we need to trigger the initial server data fetch
-    this.request({
-      // pagination: this.serverPagination,
-      filter: this.filter,
-    });
+    this.search({});
   },
 };
 </script>

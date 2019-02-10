@@ -1,7 +1,9 @@
 {
-  "title":"Spiderman: Far From Home",
-  "genre": "Action",
-  "studio": "Marvel",
+  "actors": ["Jake Gyllenhaal"],
+  "category": "Genre",
   "director": "Jon Watts",
-  "actors": ["Jake Gyllenhaal"]
+  "genre": "Action",
+  "search": "Action",
+  "studio": "Marvel",
+  "title":"Spiderman: Far From Home"
 }
