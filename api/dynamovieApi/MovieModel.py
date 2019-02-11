@@ -45,7 +45,7 @@ class MovieModel(Model):
                    category, search):
         """Update a movie, preserving any search filter."""
         movie = MovieModel(oldtitle)
-        self.del_title(oldtitle, category, search)
+        self.del_title(oldtitle)
         movie.Title = newtitle
         movie.Actor = actors
         movie.Director = director

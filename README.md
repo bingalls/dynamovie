@@ -13,7 +13,17 @@ Npm's `dynalite` package claims to easily run local DynamoDB, but is not
 available for the current Node version.
 
 ### Linux
-* todo
+Untested! (send feedback)
+
+#### Ubuntu, Debian, Mint
+* sudo apt-get install python3 awscli openjdk
+
+#### RedHat, Centos, Fedora
+* sudo rpm i python3 awscli openjdk
+
+#### All Linux
+* https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
+* pip3 install pyenv-virtualenv pyenv-virtualenvwrapper
 
 ### Mac OSX
 * Install [Homebrew](https://brew.sh/)
@@ -25,7 +35,7 @@ It is possible to adapt this with your legacy web application.
 Uses Quasar Vue.js framework, and Python Django ReST framework.
 
 ### MS Windows
-* todo
+Todo (send feedback)
 * Consider Cygwin or Windows 10 Bash shell
 
 ### All
@@ -51,8 +61,9 @@ Mac & Linux users may clean up newlines for git:
 
 ## Run
 * `./start.sh`
-* Note that terminating start.sh with Control-C does not terminate API server nor 
-database started in background
+* Should automatically open browser with http://localhost:8080/
+* You can debug ReST API in http://127.0.0.1:8000/movies/
+* Call `./stop.sh` before closing terminal, to clean up background services
 * Edit api/dynamovie/settings.py before running in production! Settings are *not secure*
 
 ## Testing
@@ -70,6 +81,7 @@ However, this code needs unit and integration testing
 This code is not fully polished for production. 
 With community support, the following will be improved:
 
+* Clicking the Confirm Delete button does not clear nor collapse its row!
 * Quasar is still a beta release
 * Fewest Quasar files were changed, to ease upgrades. For example, side menu is unchanged.
 * No TLS, nor authentication. Updates & deletes should be restricted for a production release.

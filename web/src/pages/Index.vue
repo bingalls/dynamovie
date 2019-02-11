@@ -2,7 +2,6 @@
   <q-page class="flex flex-center">
     <!-- Search box. Moving this to the title bar, puts the model scope in a new component -->
     <form class="flexbox">
-      <!-- <q-select :options="selectCriteria" v-model="genre"  /> -->
       <q-select :options="selectCriteria" v-model="currentCrit"  />
       <q-input class="col" clearable placeholder="keyword" v-model="keyword"
        @keydown.enter="search" />
@@ -51,13 +50,8 @@
           </q-popup-edit>
         </q-td>
         <q-td key="delkey" :props="props">
-          <!-- <q-btn flat round delete icon="delete" v-model="props.row.title"
-          @click="deleteMovie" label="props.row.title" /> -->
-
           <q-collapsible icon="delete">
             <form>
-              <!-- <input type="hidden" name="title" value="{{rops.row.title}}"
-                v-model="props.row.title" /> -->
               <q-input name="todelete" readonly v-model="title" value="props.row.title" />
               <q-btn :data-id="props.row.title" icon="delete" label="Confirm"
                @click="deleteMovie" :value="props.row.title" />
@@ -133,6 +127,7 @@ export default {
       { label: 'independent', value: 'independent' },
       { label: 'Lucas Films', value: 'Lucas Films' },
       { label: 'Marvel', value: 'Marvel' },
+      { label: 'Twentieth Century Fox', value: 'Twentieth Century Fox' },
       { label: 'Universal', value: 'Universal' },
     ],
     columns: [
@@ -207,7 +202,7 @@ export default {
       axios
         .delete(`${this.url}/movie/${event.currentTarget.getAttribute('data-id')}`)
         .then(() => {
-          this.search({});
+          this.search();
           this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
@@ -250,7 +245,7 @@ export default {
   },
   mounted() {
     // once mounted, we need to trigger the initial server data fetch
-    this.search({});
+    this.search();
   },
 };
 </script>
