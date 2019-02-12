@@ -77,17 +77,18 @@ Robust static analysis has been applied, including
 
 However, this code needs unit and integration testing
 
-## Road Map
+## Road Map & Known Bugs
 This code is not fully polished for production. 
 With community support, the following will be improved:
 
-* Clicking the Confirm Delete button does not clear nor collapse its row!
 * Quasar is still a beta release
 * Fewest Quasar files were changed, to ease upgrades. For example, side menu is unchanged.
 * No TLS, nor authentication. Updates & deletes should be restricted for a production release.
 * API's host url setting in Index.vue should be moved to a file similar to quasar.conf.js
 * API can be richer: versioning, schema, graphql, etc
-* Pagination is currently client side, only. Server pagination is commented.
+* Pagination is currently client side, only. Server pagination is commented, untested.
 * Studios & Genres come from a limited static list
 * Move to TypeScript, just like the next version of Vue & Quasar
-* The table is too wide for mobile. Open to suggestions
+* The table is too wide for mobile. Open to suggestions.
+* Sanitization disallows '&' in movie titles, for example
+* Deleting a row reloads page. Perhaps too heavy, and untested on native mobile

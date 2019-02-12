@@ -202,13 +202,13 @@ export default {
       axios
         .delete(`${this.url}/movie/${event.currentTarget.getAttribute('data-id')}`)
         .then(() => {
-          this.search();
           this.loading = false; // exit QTable loading state
         })
         .catch((error) => {
           this.loading = false; // exit QTable loading state
           console.warn(error); // eslint-disable-line no-console
         });
+      window.location.reload(); // ToDo: use lighter display update
     },
     editMovie(target, id, column) {
       const formData = {

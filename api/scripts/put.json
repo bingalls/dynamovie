@@ -1,4 +1,5 @@
-{
+[
+  {
   "actors": ["Jake Gyllenhaal"],
   "category": "Genre",
   "director": "Jon Watts",
@@ -6,4 +7,14 @@
   "search": "Action",
   "studio": "Marvel",
   "title":"Spiderman: Far From Home"
+},
+{
+  "actors": ["Jordana Brewster"],
+  "category": "Genre",
+  "director": "Justin Lin",
+  "genre": "Action",
+  "search": "Action",
+  "studio": "Universal",
+  "title":"Fast and Furious 9"
 }
+]
