@@ -39,8 +39,6 @@ module.exports = function (ctx) {
       open: true // opens browser window automatically
     },
     // framework: 'all' --- includes everything; for dev only!
-    // 'QDialog',
-    // 'QModal',
     framework: {
       components: [
         'QBtn',
@@ -90,9 +88,9 @@ module.exports = function (ctx) {
       // workboxPluginMode: 'InjectManifest',
       // workboxOptions: {},
       manifest: {
-        name: 'Dyna Movies',
+        // name: 'Quasar App',
         // short_name: 'Quasar-PWA',
-        description: 'Scalable movie listings',
+        // description: 'Best PWA App in town!',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
