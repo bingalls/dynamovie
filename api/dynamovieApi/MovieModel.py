@@ -17,7 +17,7 @@ class MovieModel(Model):
         """
 
         table_name = "Movies"
-        host = "http://localhost:8000"
+        host = "http://localhost:8008"
     Title = UnicodeAttribute(hash_key=True)
     Genre = UnicodeAttribute()
     Studio = UnicodeAttribute()

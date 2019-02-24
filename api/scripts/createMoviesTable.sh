@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Compact syntax https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html
-aws dynamodb create-table --endpoint-url http://localhost:8000 \
+aws dynamodb create-table --endpoint-url http://localhost:8008 \
 --table-name Movies \
 --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
 --attribute-definitions AttributeName=Title,AttributeType=S \

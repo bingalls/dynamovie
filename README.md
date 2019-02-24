@@ -13,10 +13,10 @@ Npm's `dynalite` package claims to easily run local DynamoDB, but is not
 available for the current Node version.
 
 ### Linux
-Untested! (send feedback)
+Tested only on Ubuntu
 
 #### Ubuntu, Debian, Mint
-* sudo apt-get install python3 awscli openjdk
+* sudo apt-get install python3 awscli openjdk-11 libcairo2-dev
 
 #### RedHat, Centos, Fedora
 * sudo rpm i python3 awscli openjdk
@@ -24,11 +24,12 @@ Untested! (send feedback)
 #### All Linux
 * https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
 * pip3 install pyenv-virtualenv pyenv-virtualenvwrapper
+* edit api/scripts/startDynamo.sh to call `java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb`
 
 ### Mac OSX
 * Install [Homebrew](https://brew.sh/)
 * `brew install python3 --with-brewed-openssl`
-* `brew install awscli cask node pyenv-virtualenv pyenv-virtualenvwrapper`
+* `brew install awscli cask node pyenv-virtualenv pyenv-virtualenvwrapper cairo`
 * `brew cask install dynamodb-local`
 Dynamovie: A responsive, single page progressive movie database using Amazon's DynamoDB.
 It is possible to adapt this with your legacy web application.
@@ -43,15 +44,22 @@ Linux may require `sudo` for the following
 * `npm i -g eslint-plugin-vue quasar-cli vue-cli @vue/cli-init`
 * `git clone git@github.com:bingalls/dynamovie.git`
 * `cd dynamovie`
+* aws configure
+  * aws_access_key_id = fakeMyKeyId
+  * aws_secret_access_key = fakeSecretAccessKey
+  * region = us-east-1      # see aws docs for your local region
+  * output = json
 
 ### DynyamoDB Local Setup
+Note that DynamoDB uses the same default port 8000 as Django.
+api/scripts sets DynamoDB's port to 8008
 * `cd api/scripts`
 * `bash createMoviesTable.sh`
 * `bash seedMovie.sh` # optional
 
 ### Python Setup
 * `cd api`
-* `python3 -m virtualenv venv`
+* `python3 -m virtualenv venv`   # not necessary, if you already run python3
 * `pip3 check`
 * `pip3 install -r requirements.txt`
 * `ln -s venv ..` # for your IDE
